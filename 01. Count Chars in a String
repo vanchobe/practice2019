@@ -1,0 +1,42 @@
+package com.vaniondabeat;
+
+import java.util.*;
+
+
+public class Main {
+    static class Peoples {
+
+    }
+
+    // Force Book
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        String input = scanner.nextLine();
+        Map<Character, Integer> myCharacters = new LinkedHashMap<>();
+
+
+
+            for (int i = 0; i < input.length(); i++) {
+                if (input.charAt(i) != ' ') {
+                    char addThisChars = input.charAt(i);
+
+                    if (!myCharacters.containsKey(addThisChars)) {
+                        myCharacters.put(addThisChars, 1);
+                    } else {
+                        int currentCount = myCharacters.get(addThisChars);
+                        myCharacters.put(addThisChars, currentCount + 1);
+
+                    }
+                }
+            }
+
+        for (Map.Entry<Character, Integer> entry : myCharacters.entrySet()) {
+            System.out.printf("%s -> %d%n", entry.getKey(), entry.getValue());
+        }
+
+
+    }
+
+
+}
