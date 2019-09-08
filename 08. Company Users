@@ -1,0 +1,51 @@
+package com.vaniondabeat;
+
+import java.util.*;
+
+
+public class Main {
+    static class Products {
+
+    }
+
+    //    A miner Task
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        String input = scanner.nextLine();
+        Map<String, List<String>> companyUsers = new HashMap<>();
+
+        while (!input.contains("End")) {
+            if (input.contains("End")) {
+                break;
+            }
+//            SoftUni -> AA12345
+
+            String[] tokens = input.split(" -> ");
+            String companyName = tokens[0];
+            String employeeId = tokens[1];
+
+            if (!companyUsers.containsKey(companyName)) {
+
+                companyUsers.put(companyName, new ArrayList<>());
+                companyUsers.get(companyName).add(employeeId);
+            } else {
+
+                if (!companyUsers.get(companyName).contains(employeeId)) {
+                    companyUsers.get(companyName).add(employeeId);
+                }
+
+
+            }
+            input = scanner.nextLine();
+        }
+        companyUsers.entrySet().stream().sorted(
+                (f, s) ->
+                        f.getKey().compareTo(s.getKey())
+
+
+        ).forEach(users -> System.out.printf("%s%n-- %s%n", users.getKey(), String.join("\n-- ", users.getValue())));
+
+
+    }
+}
