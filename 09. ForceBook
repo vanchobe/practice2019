@@ -1,0 +1,85 @@
+package com.vaniondabeat;
+
+import java.util.*;
+
+
+public class Main {
+    static class Products {
+
+    }
+
+    //    A miner Task
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        String input = scanner.nextLine();
+        Map<String, List<String>> members = new HashMap<>();
+
+        while (!input.contains("Lumpawaroo")) {
+            if (input.contains("Lumpawaroo")) {
+                break;
+            }
+
+            if (input.contains(" | ")) {
+                String[] tokens = input.split(" \\| ");
+                String forceSide = tokens[0];
+                String forceUser = tokens[1];
+
+                if (!members.containsKey(forceSide)) {
+                    members.put(forceSide, new LinkedList<>());
+                    members.get(forceSide).add(forceUser);
+
+                } else {
+                    members.get(forceSide).add(forceUser);
+                }
+            }
+            if (input.contains(" -> ")) {
+                String[] tokens = input.split(" -> ");
+                String forceUser = tokens[0];
+                String forceSide = tokens[1];
+                for (Map.Entry<String, List<String>> entry : members.entrySet()) {
+                    if (entry.getValue().contains(forceUser)) {
+                        entry.getValue().remove(forceUser);
+
+                    }
+
+                }
+
+                if (!members.containsKey(forceSide)) {
+                    members.put(forceSide, new LinkedList<>());
+                    members.get(forceSide).add(forceUser);
+                    System.out.println(forceUser + " joins the " + forceSide +" side!");
+                } else {
+                    if (!members.get(forceSide).contains(forceUser)) {
+                        members.get(forceSide).add(forceUser);
+                        System.out.println(forceUser + " joins the " + forceSide +" side!");
+                    }
+
+                }
+
+            }
+            input = scanner.nextLine();
+
+        }
+
+        members.entrySet().stream().sorted(
+                (f, s) -> {
+                    int result = f.getValue().size() - s.getValue().size();
+                    if (result == 0) {
+                        result = f.getKey().compareTo(s.getKey());
+
+                    }
+                    return result;
+                }
+
+        ).forEach(m -> {
+            if(m.getValue().size() != 0){
+                System.out.printf("Side: %s, Members: %s%n", m.getKey(), m.getValue().size());
+
+            }
+
+            m.getValue().stream().sorted(String::compareTo).forEach(user -> System.out.println("! " + user));
+        });
+
+    }
+}
