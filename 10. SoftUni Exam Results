@@ -1,0 +1,86 @@
+package com.vaniondabeat;
+
+import java.util.*;
+
+
+public class Main {
+    static class Peoples {
+
+    }
+
+    // Force Book
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        Map<String, Integer> users = new HashMap<>();
+        Map<String, Integer> languages = new HashMap<>();
+
+        String input = scanner.nextLine();
+        while (!input.contains("exam finished")) {
+            if (input.contains("exam finished")) {
+                break;
+            }
+            String[] tokens = input.split("-");
+//            {username}-{language}-{points}
+
+            if (tokens[1].contains("banned")) {
+                String username = tokens[0];
+                users.remove(username);
+
+            } else {
+                String username = tokens[0];
+                String language = tokens[1];
+                int points = Integer.parseInt(tokens[2]);
+
+                if (!users.containsKey(username)) {
+                    users.put(username, points);
+
+                } else {
+                    int currentPoints = users.get(username);
+                    if (currentPoints < points) {
+                        users.put(username, points);
+
+                    }
+                }
+                if (!languages.containsKey(language)) {
+                    languages.put(language, 1);
+                } else {
+                    int currentCount = languages.get(language);
+                    languages.put(language, currentCount + 1);
+
+                }
+            }
+            input = scanner.nextLine();
+        }
+        System.out.println("Results:");
+//        for (Map.Entry<String, Integer> entry : users.entrySet()) {
+//            System.out.printf("%s | %d%n",entry.getKey(),entry.getValue());
+//        }
+
+        users.entrySet().stream().sorted(
+                (f, s) -> {
+                    int result = s.getValue() - f.getValue();
+
+                    if (result == 0) {
+                     result = f.getKey().compareTo(s.getKey());
+
+
+
+
+                    }
+                    return result;
+                }
+        ).forEach(user -> System.out.printf("%s | %d%n",user.getKey(),user.getValue()));
+
+
+        System.out.println("Submissions:");
+        for (Map.Entry<String, Integer> entry : languages.entrySet()) {
+
+            System.out.printf("%s - %d%n", entry.getKey(), entry.getValue());
+        }
+
+
+    }
+
+
+}
