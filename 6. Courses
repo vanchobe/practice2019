@@ -1,0 +1,92 @@
+package com.vaniondabeat;
+
+import java.io.File;
+import java.lang.reflect.Array;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.sql.SQLOutput;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+
+public class Main {
+    static class Products {
+        double price;
+        int quantity;
+
+        public double getPrice() {
+            return price;
+        }
+
+        public void setPrice(double price) {
+            this.price = price;
+        }
+
+        public int getQuantity() {
+            return quantity;
+        }
+
+        public void setQuantity(int quantity) {
+            this.quantity = quantity;
+        }
+
+        public Products(double price, int quantity) {
+            this.price = price;
+            this.quantity = quantity;
+        }
+    }
+
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+
+        String input = scanner.nextLine();
+
+        Map<String, List<String>> courses = new LinkedHashMap<>();
+
+        while (!input.contains("end")) {
+            if (input.contains("end")) {
+                break;
+            }
+            String[] tokens = input.split(" : ");
+            String courseName = tokens[0];
+            String registeredStudents = tokens[1];
+            if (!courses.containsKey(courseName)) {
+                courses.put(courseName, new LinkedList<>());
+                courses.get(courseName).add(registeredStudents);
+            } else {
+                courses.get(courseName).add(registeredStudents);
+            }
+
+            input = scanner.nextLine();
+        }
+
+
+//            System.out.printf("%s: %d%n", entry.getKey(), entry.getValue().size());
+        courses.entrySet().stream().sorted(
+                (f, s) ->
+                        s.getValue().size() - f.getValue().size()
+
+
+        ).forEach(s ->
+
+                {
+                    System.out.printf("%s: %d%n", s.getKey(), s.getValue().size());
+
+                    s.getValue().stream().sorted(
+                            (f,c) -> f.compareTo(c)).forEach(p -> System.out.printf("-- %s%n",p));
+                }
+
+
+
+
+
+        );
+
+
+    }
+
+
+}
