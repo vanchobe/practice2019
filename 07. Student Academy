@@ -1,0 +1,115 @@
+package com.vaniondabeat;
+
+import java.io.File;
+import java.lang.reflect.Array;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.sql.SQLOutput;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+
+public class Main {
+    static class Students {
+//        float grade;
+//        float averageGrade;
+//        float numOfGrades = 0;
+//
+//        public Students(float grade, float averageGrade, float numOfGrades) {
+//            this.grade = grade;
+//            this.averageGrade = averageGrade;
+//            this.numOfGrades = numOfGrades;
+//        }
+//
+//        public float getGrade() {
+//            return grade;
+//        }
+//
+//        public float getAverageGrade() {
+//            return averageGrade;
+//        }
+//
+//        public float getNumOfGrades() {
+//            return numOfGrades;
+//        }
+    }
+
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        Map<String, Double> students = new HashMap<>();
+        Map<String, Integer> grades = new HashMap<>();
+
+        int n = Integer.parseInt(scanner.nextLine());
+
+        for (int i = 0; i < n * 2; i += 2) {
+            String name = scanner.nextLine();
+            double grade = Double.parseDouble(scanner.nextLine());
+
+            if (!students.containsKey(name)) {
+                students.put(name, grade / 1);
+
+
+                grades.put(name, 1);
+
+                //    new Students(grade, grade, 1)
+            } else {
+                double zoomedGrades = 0.0;
+                double currentGrade = 0.0;
+                double currentAVGGrade = 0.0;
+                if (grades.containsKey(name)) {
+                    grades.put(name, grades.get(name) + 1);
+                    zoomedGrades = grades.get(name);
+
+                }
+
+
+                currentGrade = students.get(name);
+                currentAVGGrade = (currentGrade + grade) / zoomedGrades;
+                students.put(name, currentAVGGrade);
+
+                // new Students(currentGrade + grade, currentAVGGrade, zoomedGrades)
+
+
+            }
+
+
+        }
+
+        students.entrySet().stream().sorted(
+                (f, s) -> {
+                    int result = s.getValue().compareTo(f.getValue());
+                    if (result == 0) {
+                        result = s.getKey().compareTo(f.getKey());
+
+                    }
+                    return result;
+                }
+
+        ).forEach(
+                entry -> {
+                    if (entry.getValue() >= 4.50) {
+                        System.out.printf("%s -> %.2f%n", entry.getKey(), entry.getValue());
+
+
+                    }
+                }
+
+        );
+
+//        for (Map.Entry<String, Double> entry : students.entrySet()) {
+//
+//                if (entry.getValue() >= 4.50) {
+//                    System.out.printf("%s -> %.2f%n", entry.getKey(), entry.getValue());
+//
+//                }
+//
+//        }
+
+
+    }
+
+
+}
