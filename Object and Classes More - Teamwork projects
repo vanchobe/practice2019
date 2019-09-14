@@ -1,0 +1,178 @@
+package com.vaniondabeat;
+
+import java.io.File;
+import java.lang.reflect.Array;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.sql.SQLOutput;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+
+public class Main {
+    static class Teams {
+        String teamCreator;
+        String teamMember;
+        String isLeader;
+
+        public Teams(String teamCreator, String teamMember, String isLeader) {
+            this.teamCreator = teamCreator;
+            this.teamMember = teamMember;
+            this.isLeader = isLeader;
+        }
+
+        public String getTeamCreator() {
+            return teamCreator;
+        }
+
+        public String getTeamMember() {
+            return teamMember;
+        }
+
+        public String getIsLeader() {
+            return isLeader;
+
+        }
+    }
+
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        int n = Integer.parseInt(scanner.nextLine());
+        Map<String, List<Teams>> teams = new TreeMap<>();
+
+        boolean isFound = false;
+
+        for (int i = 0; i < n; i++) {
+            String[] tokens = scanner.nextLine().split("-");
+            String teamLeader = tokens[0];
+            String teamName = tokens[1];
+
+
+            if (!teams.containsKey(teamName)) {
+                teams.put(teamName, new ArrayList<>());
+                teams.get(teamName).add(new Teams(teamLeader, "none", "yes"));
+                System.out.printf("%nTeam %s has been created by %s!", teamName, teamLeader);
+
+
+            } else {
+                System.out.printf("%nTeam %s was already created!", teamName);
+
+            }
+        }
+        String input = scanner.nextLine();
+        while (!input.contains("end of assignment")) {
+            if (input.contains("end of assignment")) {
+                break;
+            }
+            String[] tokens = input.split("->");
+
+            String memberName = tokens[0];
+            String teamName = tokens[1];
+
+            if (teams.containsKey(teamName)) {
+
+                for (Map.Entry<String, List<Teams>> entry : teams.entrySet()) {
+                    for (int j = 0; j < entry.getValue().size(); j++) {
+                        if (entry.getValue().get(j).getTeamCreator().equals(memberName)) {
+                            isFound = true;
+                            break;
+
+                        }
+                    }
+                }
+                if (isFound) {
+                    System.out.printf("%nMember %s cannot join team %s!", memberName, teamName);
+                } else {
+                    teams.get(teamName).add(new Teams("none", memberName, "no"));
+
+                }
+
+            } else {
+                System.out.printf("%nTeam %s does not exist!", teamName);
+            }
+
+
+            input = scanner.nextLine();
+        }
+
+        boolean haveTeamsToDisband = true;
+
+        for (Map.Entry<String, List<Teams>> entry : teams.entrySet()) {
+            if (entry.getValue().size() == 1) {
+                haveTeamsToDisband = false;
+
+            }
+        }
+
+
+        teams.entrySet().stream().sorted(
+                (f, s) -> {
+                    int result = s.getValue().size() - f.getValue().size();
+                    if (result == 0) {
+                        result = f.getKey().compareTo(s.getKey());
+
+                    }
+                    return result;
+                }
+
+
+        ).forEach(entry ->
+                {
+                    if (entry.getValue().size() != 1) {
+                        System.out.printf("%n%s%n", entry.getKey());
+                    }
+                    entry.getValue().stream().sorted((f, s) ->
+                            {
+                                int result = f.getTeamCreator().compareTo(s.getTeamCreator());
+                                if (result == 0) {
+                                    result = f.getTeamMember().compareTo(s.getTeamMember());
+
+                                }
+                                return result;
+
+                            }
+
+
+                    ).forEach(user ->
+
+                            {
+                                if (entry.getValue().size() != 1) {
+                                    if (user.getIsLeader().equals("yes")) {
+                                        System.out.printf("- %s%n", user.getTeamCreator());
+
+                                    }
+                                    if (user.getTeamCreator().equals("none")) {
+                                        System.out.printf("-- %s%n", user.getTeamMember());
+
+                                    }
+
+                                } else {
+
+                                    if (entry.getValue().size() == 1) {
+                                        System.out.println("Teams to disband:");
+                                        System.out.printf(
+                                                "%s%n", entry.getKey());
+
+                                    }
+                                }
+                            }
+
+
+                    );
+                }
+
+
+        );
+        if (haveTeamsToDisband) {
+
+            System.out.println("Teams to disband:");
+        }
+
+    }
+
+
+}
