@@ -1,0 +1,224 @@
+package com.vaniondabeat;
+
+import java.awt.image.AreaAveragingScaleFilter;
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class Main {
+
+    public static void main(String[] args) {
+
+        Scanner scanner = new Scanner(System.in);
+
+        int rows = 8;
+        int cols = 8;
+
+        char[][] matrix = new char[rows][cols];
+
+        for (int i = 0; i < rows; i++) {
+            String[] line = scanner.nextLine().split(" ");
+            char[] charArray = new char[line.length];
+            for (int j = 0; j < line.length; j++) {
+                char currentChar = line[j].charAt(0);
+                charArray[j] = currentChar;
+
+            }
+            matrix[i] = charArray;
+
+
+        }
+        int countQueens = 0;
+        boolean checkLeftUpIsValid = false;
+        boolean checkRightUpIsValid = false;
+        boolean checkUpIsValid = false;
+        boolean checkLeftDownIsValid = false;
+        boolean checkRightDownIsValid = false;
+        boolean checkDownIsValid = false;
+        boolean checkLeftIsValid = false;
+        boolean checkRightIsValid = false;
+        for (int row = 0; row < matrix.length; row++) {
+            for (int col = 0; col < matrix[row].length; col++) {
+                if (matrix[row][col] == 'q') {
+                    int currentRow = row;
+                    int currentCol = col;
+                    checkLeftUpIsValid = checkLeftUp(matrix, currentRow, currentCol);
+                    checkRightUpIsValid = checkRightUp(matrix, currentRow, currentCol);
+                    checkUpIsValid = checkUp(matrix, currentRow, currentCol);
+                    checkLeftDownIsValid = checkLeftDown(matrix, currentRow, currentCol);
+
+                    checkRightDownIsValid = checkRightDown(matrix, currentRow, currentCol);
+                    checkDownIsValid = checkDown(matrix, currentRow, currentCol);
+                    checkLeftIsValid = checkLeft(matrix, currentRow, currentCol);
+                    checkRightIsValid = checkRight(matrix, currentRow, currentCol);
+
+                    // Example PRoverka !
+                    if (!checkLeftUpIsValid && !checkRightUpIsValid && !checkUpIsValid && !checkLeftDownIsValid
+                            && !checkRightDownIsValid && !checkDownIsValid && !checkLeftIsValid && !checkRightIsValid) {
+//                        System.out.println("yes");
+                        System.out.println(currentRow + " " + currentCol);
+                        break;
+
+                    } else {
+//                        System.out.println("no");
+
+                    }
+
+                }
+            }
+        }
+
+    }
+
+    private static boolean checkRight(char[][] matrix, int currentRow, int currentCol) {
+        int row = currentRow;
+        int col = currentCol + 1;
+
+        while (col < matrix.length) {
+
+            if (matrix[row][col] == 'q') {
+                return true;
+
+            }
+            col++;
+
+
+        }
+
+        return false;
+    }
+
+    private static boolean checkLeft(char[][] matrix, int currentRow, int currentCol) {
+        int row = currentRow;
+        int col = currentCol - 1;
+
+        while (col >= 0) {
+
+            if (matrix[row][col] == 'q') {
+                return true;
+
+            }
+            col--;
+
+
+        }
+
+        return false;
+    }
+
+    private static boolean checkDown(char[][] matrix, int currentRow, int currentCol) {
+        int row = currentRow + 1;
+        int col = currentCol;
+
+        while (row < matrix.length) {
+
+            if (matrix[row][col] == 'q') {
+                return true;
+
+            }
+            row++;
+
+
+        }
+
+        return false;
+    }
+
+    private static boolean checkRightDown(char[][] matrix, int currentRow, int currentCol) {
+        int row = currentRow + 1;
+        int col = currentCol + 1;
+
+        while (row < matrix.length && col < matrix.length) {
+
+            if (matrix[row][col] == 'q') {
+                return true;
+
+            }
+            row++;
+            col++;
+
+
+        }
+
+        return false;
+    }
+
+    private static boolean checkLeftDown(char[][] matrix, int currentRow, int currentCol) {
+        int row = currentRow + 1;
+        int col = currentCol - 1;
+        while (row < matrix.length && col >= 0) {
+            if (matrix[row][col] == 'q') {
+                return true;
+
+            }
+            row++;
+            col--;
+
+
+        }
+
+        return false;
+    }
+
+    private static boolean checkUp(char[][] matrix, int currentRow, int currentCol) {
+        int row = currentRow - 1;
+        int col = currentCol;
+
+        while (row >= 0) {
+
+            if (matrix[row][col] == 'q') {
+                return true;
+
+            }
+            row--;
+
+
+        }
+
+        return false;
+
+    }
+
+
+    private static boolean checkRightUp(char[][] matrix, int currentRow, int currentCol) {
+
+        int row = currentRow - 1;
+        int col = currentCol + 1;
+
+        while (row >= 0 && col < matrix.length) {
+
+            if (matrix[row][col] == 'q') {
+                return true;
+
+            }
+            row--;
+            col++;
+
+
+        }
+
+        return false;
+    }
+
+    private static boolean checkLeftUp(char[][] matrix, int currentRow, int currentCol) {
+
+
+        int row = currentRow - 1;
+        int col = currentCol - 1;
+
+        while (row > 0 && col >= 0) {
+
+            if (matrix[row][col] == 'q') {
+                return true;
+
+            }
+            row--;
+            col--;
+
+
+        }
+
+        return false;
+    }
+
+
+}
