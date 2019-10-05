@@ -1,0 +1,201 @@
+package com.vaniondabeat;
+
+import java.awt.image.AreaAveragingScaleFilter;
+import java.lang.reflect.Array;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
+public class Main {
+    static class DragonsInfo {
+        private String name;
+        private double damage;
+        private double health;
+        private double armor;
+
+        public DragonsInfo(String name, double damage, double health, double armor) {
+            this.name = name;
+            this.damage = damage;
+            this.health = health;
+            this.armor = armor;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public double getDamage() {
+            return damage;
+        }
+
+        public double getHealth() {
+            return health;
+        }
+
+        public double getArmor() {
+            return armor;
+        }
+    }
+
+    public static void main(String[] args) {
+
+        Scanner scanner = new Scanner(System.in);
+
+        String input = scanner.nextLine();
+        Map<String, Integer> materials = new HashMap<>();
+        Map<String, Integer> junk = new TreeMap<>();
+
+        boolean itemObtained = false;
+        String itemName = "";
+
+        while (!itemObtained) {
+            if (itemObtained) {
+                break;
+
+            }
+            String[] tokens = input.split(" ");
+
+            String resource = "";
+            int quantity = 0;
+
+            for (int i = 0; i < tokens.length; i++) {
+                if (i % 2 == 0) {
+
+                    quantity = Integer.parseInt(tokens[i]);
+                } else {
+                    resource = tokens[i].toLowerCase();
+                }
+                if (i % 2 != 0) {
+                    if (resource.equals("shards") || resource.equals("fragments") || resource.equals("motes")) {
+
+
+                        if (!materials.containsKey(resource)) {
+                            if (quantity >= 250) {
+                                if (resource.equals("shards")) {
+
+                                    itemName = "Shadowmourne";
+                                }
+                                if (resource.equals("fragments")) {
+                                    itemName = "Valanyr";
+
+                                }
+                                if (resource.equals("motes")) {
+
+                                    itemName = "Dragonwrath";
+                                }
+                                itemObtained = true;
+                                materials.put(resource, quantity - 250);
+                                break;
+                            } else {
+                                materials.put(resource, quantity);
+
+                            }
+
+
+                        } else {
+                            int current = materials.get(resource);
+                            if (quantity >= 250 || quantity + current >= 250) {
+                                if (resource.equals("shards")) {
+
+                                    itemName = "Shadowmourne";
+                                }
+                                if (resource.equals("fragments")) {
+                                    itemName = "Valanyr";
+
+                                }
+                                if (resource.equals("motes")) {
+
+                                    itemName = "Dragonwrath";
+                                }
+                                itemObtained = true;
+                                materials.put(resource, current + quantity - 250);
+                                break;
+                            } else {
+
+                                materials.put(resource, current + quantity);
+                            }
+
+
+                        }
+                    } else {
+                        if (!junk.containsKey(resource)) {
+                            junk.put(resource, quantity);
+
+                        } else {
+                            int current = junk.get(resource);
+                            junk.put(resource, current + quantity);
+
+                        }
+                    }
+                }
+            }
+            boolean containMotes = false;
+            boolean containFragments = false;
+            boolean containShards = false;
+            for (Map.Entry<String, Integer> entry : materials.entrySet()) {
+                if (entry.getKey().equals("motes")) {
+                    containMotes = true;
+                }
+                if (entry.getKey().equals("shards")) {
+                    containShards = true;
+                }
+                if (entry.getKey().equals("fragments")) {
+                    containFragments = true;
+                }
+
+            }
+            if (!containMotes) {
+                materials.put("motes",0);
+            }
+            if (!containFragments) {
+                materials.put("fragments",0);
+
+            }
+            if (!containShards) {
+                materials.put("shards",0);
+
+            }
+
+            if (itemObtained) {
+                break;
+            } else {
+                input = scanner.nextLine();
+
+            }
+
+        }
+        System.out.println(itemName + " obtained!");
+//        System.out.printf("%n%s obtained!%n", itemName);
+        materials.entrySet().stream().sorted(
+                (f, s) -> {
+                    int result = s.getValue().compareTo(f.getValue());
+                    if(result == 0){
+                        result = f.getKey().compareTo(s.getKey());
+                    }
+                    return result;
+                }
+
+        ).forEach(
+                e -> {
+                    System.out.printf("%s: %d%n", e.getKey(), e.getValue());
+                }
+        );
+        junk.entrySet().stream().sorted(
+                (f, s) -> {
+                    int result = 0;
+                    return result;
+                }
+
+        ).forEach(
+                e -> {
+                    System.out.printf("%s: %d%n", e.getKey(), e.getValue());
+                }
+        );
+
+
+    }
+
+
+}
