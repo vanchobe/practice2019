@@ -1,0 +1,149 @@
+package com.vaniondabeat;
+
+import java.awt.image.AreaAveragingScaleFilter;
+import java.lang.reflect.Array;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
+public class Main {
+    static class DragonsInfo {
+        private String name;
+        private double damage;
+        private double health;
+        private double armor;
+
+        public DragonsInfo(String name, double damage, double health, double armor) {
+            this.name = name;
+            this.damage = damage;
+            this.health = health;
+            this.armor = armor;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public double getDamage() {
+            return damage;
+        }
+
+        public double getHealth() {
+            return health;
+        }
+
+        public double getArmor() {
+            return armor;
+        }
+    }
+
+    public static void main(String[] args) {
+
+        Scanner scanner = new Scanner(System.in);
+
+        String input = scanner.nextLine();
+
+        Map<String, Map<String, Long>> concerts = new LinkedHashMap<>();
+
+        while (!input.equals("End")) {
+            if (input.equals("End")) {
+                break;
+
+            }
+            // Lepa Brena @Sunny Beach 25 3500
+            String singerName = "invalid";
+            String venue = "invalid";
+            double ticketsPrice = -1;
+            double ticketsCount = -1;
+
+
+            int indexOfAt = input.indexOf("@");
+            if (input.charAt(indexOfAt - 1) == ' ') {
+                singerName = input.substring(0, indexOfAt - 1);
+
+            }
+            String restInput = input.substring(indexOfAt, input.length());
+
+            final String regex = "([A-Za-z ]+)([0-9]+)\\s([0-9]+)";
+
+
+            final Pattern pattern = Pattern.compile(regex, Pattern.MULTILINE);
+            final Matcher matcher = pattern.matcher(restInput);
+
+            while (matcher.find()) {
+
+                if (matcher.group(1) != null) {
+                    venue = matcher.group(1);
+                }
+                if (matcher.group(2) != null) {
+                    ticketsPrice = Double.parseDouble(matcher.group(2));
+                }
+                if (matcher.group(3) != null) {
+                    ticketsCount = Double.parseDouble(matcher.group(3));
+                }
+            }
+            if (singerName.equals("invalid") || venue.equals("invalid") || ticketsPrice == -1 || ticketsCount == -1) {
+
+            } else {
+                if (!concerts.containsKey(venue)) {
+                    concerts.put(venue, new LinkedHashMap<>());
+                    concerts.get(venue).put(singerName, (long) (ticketsPrice * ticketsCount));
+
+                } else {
+                    boolean isFound = false;
+                    long currentAmount = 0;
+
+                    for (Map.Entry<String, Map<String, Long>> entry : concerts.entrySet()) {
+                        if (entry.getKey().equals(venue)) {
+                            for (Map.Entry<String, Long> secondEntry : entry.getValue().entrySet()) {
+                                if (secondEntry.getKey().equals(singerName)) {
+                                    isFound = true;
+                                    currentAmount = secondEntry.getValue();
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    if (isFound) {
+
+                        concerts.get(venue).put(singerName, ((long) (ticketsPrice * ticketsCount)) + currentAmount);
+
+                    } else {
+                        concerts.get(venue).put(singerName, (long) (ticketsPrice * ticketsCount));
+
+                    }
+
+
+                }
+            }
+
+
+            input = scanner.nextLine();
+        }
+
+        concerts.entrySet().stream().forEach(
+                entry -> {
+                    System.out.printf("%s%n", entry.getKey());
+
+                    entry.getValue().entrySet().stream().sorted(
+                            (f, s) -> {
+                                int result = s.getValue().compareTo(f.getValue());
+                                return result;
+                            }
+
+                    ).forEach(
+                            concert -> {
+                                System.out.printf("#  %s -> %d%n", concert.getKey(), concert.getValue());
+                            }
+
+                    );
+                }
+
+
+        );
+    }
+
+
+}
