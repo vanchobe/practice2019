@@ -1,0 +1,94 @@
+package com.vaniondabeat;
+
+import java.util.*;
+
+public class Main {
+
+    public static void main(String[] args) {
+
+        Scanner scanner = new Scanner(System.in);
+
+        String[] tickets = scanner.nextLine().split(",\\s+");
+
+        int counter = 0;
+        StringBuilder charBilder = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
+        boolean isValidNoMatch = false;
+        for (int i = 0; i < tickets.length; i++) {
+            isValidNoMatch = false;
+            String currentTicket = tickets[i];
+            charBilder.setLength(0);
+            charBilder.append(currentTicket);
+            sb.setLength(0);
+            for (int j = 0; j < currentTicket.length(); j++) {
+                char currentChar = currentTicket.charAt(j);
+                if (currentChar == '@' || currentChar == '#' || currentChar == '$' || currentChar == '^') {
+                    isValidNoMatch = true;
+                    counter++;
+                    sb.append(currentChar);
+                    sb.append(currentChar);
+                    if (counter >= 6) {
+                        for (int k = 0; k < charBilder.length(); k++) {
+                            if (charBilder.toString().charAt(k) != currentChar) {
+
+                                charBilder.deleteCharAt(k);
+                                k--;
+
+                            }
+                        }
+
+                        break;
+
+                    }
+                } else {
+                    counter = 0;
+
+                }
+
+            }
+            int countSymbols = charBilder.length() / 2;
+
+
+            StringBuilder currentTicketSB = new StringBuilder();
+
+            for (int j = 0; j < currentTicket.length(); j++) {
+                char currentChar = currentTicket.charAt(j);
+                if (currentChar != ' ') {
+                    currentTicketSB.append(currentChar);
+                }
+            }
+
+            if (countSymbols >= 6 && countSymbols <= 9
+                    && currentTicketSB.length() == 20) {
+                if (charBilder.toString().contains(sb.toString())) {
+                    System.out.printf("ticket \"%s\" - %d%c%n", currentTicketSB.toString(), countSymbols, sb.charAt(0));
+
+                } else {
+                    System.out.println("invalid ticket");
+                }
+
+            } else if (countSymbols == 10 && charBilder.length() == 20 && isValidNoMatch) {
+                if (charBilder.toString().contains(sb.toString())) {
+                    System.out.printf("ticket \"%s\" - %d%c Jackpot!%n", currentTicketSB.toString(), countSymbols, sb.charAt(0));
+
+                } else {
+
+                    System.out.println("invalid ticket");
+                }
+            } else if (!isValidNoMatch && charBilder.length() == 20) {
+                System.out.printf("ticket \"%s\" - no match%n", currentTicketSB.toString());
+
+            } else {
+                System.out.println("invalid ticket");
+            }
+        }
+
+
+    }
+
+
+}
+
+
+
+
